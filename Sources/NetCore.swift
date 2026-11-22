@@ -84,10 +84,11 @@ enum NetDiag {
             if let port = raw[portKey] as? NSNumber { return "\(host):\(port.intValue)" }
             return host
         }
-        info.http = endpoint(kCFNetworkProxiesHTTPEnable as String, kCFNetworkProxiesHTTPProxy as String, kCFNetworkProxiesHTTPPort as String)
-        info.https = endpoint(kCFNetworkProxiesHTTPSEnable as String, kCFNetworkProxiesHTTPSProxy as String, kCFNetworkProxiesHTTPSPort as String)
-        info.socks = endpoint(kCFNetworkProxiesSOCKSEnable as String, kCFNetworkProxiesSOCKSProxy as String, kCFNetworkProxiesSOCKSPort as String)
-        if let pac = raw[kCFNetworkProxiesProxyAutoConfigURLString as String] as? String, !pac.isEmpty {
+        // iOS 上 CFNetwork 的部分常量不可用，直接用字典的原始键名
+        info.http = endpoint("HTTPEnable", "HTTPProxy", "HTTPPort")
+        info.https = endpoint("HTTPSEnable", "HTTPSProxy", "HTTPSPort")
+        info.socks = endpoint("SOCKSEnable", "SOCKSProxy", "SOCKSPort")
+        if let pac = raw["ProxyAutoConfigURLString"] as? String, !pac.isEmpty {
             info.pacURL = pac
         }
         return info
